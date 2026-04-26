@@ -12,11 +12,11 @@ using namespace std;
 //Variables
 int MedBoxCols = 5; // Số cột của MedBox
 int MedBoxRows = 5; // Số hàng của MedBox
+const int MaxMedPrescription = 5; // Số lượng thuốc tối đa trong một đơn thuốc
 
 
 //Structs
 struct Patient{
-    int id;
     string name;
     int age;
     int height;
@@ -31,7 +31,8 @@ struct Medicine{
 
 struct MedicalRecord{
     Patient patient;
-    Medicine medicine;
+    string diagnosis;
+    Medicine prescription[MaxMedPrescription]; // Patient get maximum 5 medicines per prescription
 };
 
 //Linked List
@@ -45,12 +46,17 @@ struct MedicalRecordList{
 
 //Structs-Related Variables
 Medicine** MedBox;
+queue<Patient> patientQueue;
 
 //Functions Declaration
 Patient inputPatient();
 void displayPatient(const Patient& patient);
 void InitMedBox();
-void displayMedBox();
+bool checkMedicineAvailability(string MedName, int MedAmount);
+MedicalRecord TreatingPatient();
+void displayMedicalRecord(const MedicalRecord& record);
+void InsertToMedicalRecordList(MedicalRecordList& list, const MedicalRecord& record);
+
 
 void clrscr();
 #endif // HEADER_H
