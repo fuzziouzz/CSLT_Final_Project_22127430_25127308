@@ -1,21 +1,15 @@
 //Main loop
 //Run this file to start the program
-
 #include "header.h"
 #include <iomanip>
 
-Patient ConstructorPatient(string name, int age, int height, int weight, string illness){
-    Patient patient;
-    patient.name = name;
-    patient.age = age;
-    patient.height = height;
-    patient.weight = weight;
-    patient.illness = illness;
-    return patient;
-}
-
 int main() {
     cout << "Welcome to the Smart Clinic System!" << endl;
+    srand(time(0));
+    MedicalRecordList MedicalRecordList;
+    InitMedBox();
+    InitPatientQueue();
+    LoadRecordsFromFile(MedicalRecordList, Filename); //Create an empty MedicalRecordList if File not found
     cout << "Press any key to continue..." << endl;
     cin.get();
     clrscr();
@@ -34,15 +28,23 @@ int main() {
             case 1: {
                 MedicalRecord record;
                 record = TreatingPatient();
-
+                AddMedicalRecord(MedicalRecordList, record);
+                SaveRecordsToFile(MedicalRecordList, Filename);
+                cout << "Medical record saved successfully!" << endl;
+                cout << "Press any key to return to the main menu..." << endl;
+                cin.get();
                 break;
             }
             case 2: {
-                
+                // Display Medical Reecords
+                // Can perform delete, search.
+                // Save after edits
                 break;
             }
             case 3: {
-                
+                // Display Medicine Box
+                // Can perform add, delete,...
+                // Save after edits
                 break;
             }
             case 4: {

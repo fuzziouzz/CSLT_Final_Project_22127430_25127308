@@ -10,9 +10,10 @@
 using namespace std;
 
 //Variables
-int MedBoxCols = 5; // Số cột của MedBox
-int MedBoxRows = 5; // Số hàng của MedBox
+const int MedBoxCols = 4; // Số cột của MedBox
+const int MedBoxRows = 4; // Số hàng của MedBox
 const int MaxMedPrescription = 5; // Số lượng thuốc tối đa trong một đơn thuốc
+const string Filename = "MedicalRecord.bin";
 
 
 //Structs
@@ -31,7 +32,8 @@ struct Medicine{
 
 struct MedicalRecord{
     Patient patient;
-    string diagnosis;
+    char diagnosis[100];
+    int medAmount = 0;
     Medicine prescription[MaxMedPrescription]; // Patient get maximum 5 medicines per prescription
 };
 
@@ -44,19 +46,17 @@ struct MedicalRecordList{
     MedicalRecordNode* head;
 };
 
-//Structs-Related Variables
-Medicine** MedBox;
-queue<Patient> patientQueue;
 
 //Functions Declaration
 Patient inputPatient();
 void displayPatient(const Patient& patient);
 void InitMedBox();
+void InitPatientQueue();
 bool checkMedicineAvailability(string MedName, int MedAmount);
 MedicalRecord TreatingPatient();
 void displayMedicalRecord(const MedicalRecord& record);
-void InsertToMedicalRecordList(MedicalRecordList& list, const MedicalRecord& record);
-
-
+void AddMedicalRecord(MedicalRecordList &list, MedicalRecord newRecord);
+void LoadRecordsFromFile(MedicalRecordList &list, string fileName);
+void SaveRecordsToFile(MedicalRecordList list, string fileName);
 void clrscr();
 #endif // HEADER_H
