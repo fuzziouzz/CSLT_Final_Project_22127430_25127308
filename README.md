@@ -166,6 +166,7 @@ g++ -Wall -std=c++11 main.cpp functions.cpp -o main.exe
 | `command not found: g++` | Install GCC/G++ (on Windows, use MSYS2) |
 | `error: 'string' does not name a type` | Ensure `#include <string>` is in header.h |
 | `undefined reference to` | Check that all source files are included in compilation |
+This section will be exapanded based on user report.
 
 ## Program Structure
 
