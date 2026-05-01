@@ -1,39 +1,41 @@
-//Define functions declared in header.h
+// Define functions declared in header.h
 #include "header.h"
 
-//Structs-Related Variables
+// Structs-Related Variables
 Medicine** MedBox;
 queue<Patient> patientQueue;
 
-void clrscr(){
-    //CLEAR SCREEN
+void clrscr() {
+    // Shortened of Clear Screen
     cout << "\033[2J\033[1;1H";
 }
 
 
 
-Patient ConstructorPatient(string name, int age, int height, int weight, string illness){
+Patient ConstructPatientInfo(const char* name, int age, int height, int weight, const char* illness) {
     Patient patient;
-    patient.name = name;
+    strncpy(patient.name, name, sizeof(patient.name) - 1);
+    patient.name[sizeof(patient.name) - 1] = '\0';
     patient.age = age;
     patient.height = height;
     patient.weight = weight;
-    patient.illness = illness;
+    strncpy(patient.illness, illness, sizeof(patient.illness) - 1);
+    patient.illness[sizeof(patient.illness) - 1] = '\0';
     return patient;
 }
 
 void InitPatientQueue() {
     // Initialize the patient queue with some sample patients
-    patientQueue.push(ConstructorPatient("John Doe", 30, 175, 70, "Vomiting, Diarrhea"));
-    patientQueue.push(ConstructorPatient("Jane Smith", 25, 160, 55, "Sore Throat, Runny Nose"));
-    patientQueue.push(ConstructorPatient("Alice Johnson", 40, 165, 60, "Headache, Fever"));
+    patientQueue.push(ConstructPatientInfo("John Doe", 30, 175, 70, "Vomiting, Diarrhea"));
+    patientQueue.push(ConstructPatientInfo("Jane Smith", 25, 160, 55, "Sore Throat, Runny Nose"));
+    patientQueue.push(ConstructPatientInfo("Alice Johnson", 40, 165, 60, "Headache, Fever"));
 }
 
-Patient inputPatient(){
+Patient inputPatient() {
     Patient patient;
     cout << "Enter patient name: ";
     cin.ignore();
-    getline(cin, patient.name);
+    cin.getline(patient.name, sizeof(patient.name));
     cout << "Enter patient age: ";
     cin >> patient.age;
     cout << "Enter patient height (cm): ";
@@ -42,27 +44,27 @@ Patient inputPatient(){
     cin >> patient.weight;
     cout << "Enter patient illness: ";
     cin.ignore();
-    getline(cin, patient.illness);
+    cin.getline(patient.illness, sizeof(patient.illness));
     return patient;
 }
 
 void displayPatient(const Patient& patient) {
     cout << "Name: " << patient.name << endl;
     cout << "Age: " << patient.age << endl;
-    cout << "Height: " << patient.height << " cm" << endl;
-    cout << "Weight: " << patient.weight << " kg" << endl;
+    cout << "Height: " << patient.height << " cm\n";
+    cout << "Weight: " << patient.weight << " kg\n";
     cout << "Illness: " << patient.illness << endl;
 }
 
 void displayMedicalRecord(const MedicalRecord& record) {
-    cout << "Patient Information:" << endl;
+    cout << "Patient Information:\n";
     displayPatient(record.patient);
     cout << "Diagnosis: " << record.diagnosis << endl;
     cout << "Number of Medicines Prescribed: " << record.medAmount << endl;
     cout << "Prescription:" << endl;
     for (int i = 0; i < MaxMedPrescription; ++i) {
-        if (!record.prescription[i].name.empty()) {
-            cout << "- " << record.prescription[i].name << " (Amount: " << record.prescription[i].amount << ")" << endl;
+        if (strcmp(record.prescription[i].name, "") != 0) {
+            cout << " - " << record.prescription[i].name << " (Amount: " << record.prescription[i].amount << ")\n";
         }
     }
 }
@@ -73,35 +75,35 @@ void InitMedBox() {
         MedBox[i] = new Medicine[MedBoxCols];
     }
 
-    string sampleNames[] = {
+    const char* sampleNames[] = {
         "Paracetamol", "Ibuprofen", "Amoxicillin", "Loratadine", "Omeprazole",
         "Aspirin", "Cetirizine", "Diclofenac", "Augmentin", "Decolgen"
     };
 
-    // 3. Khởi tạo giá trị ban đầu
+    // 3. Initiate some values
     int drugCount = 0;
     for (int i = 0; i < MedBoxRows; ++i) {
         for (int j = 0; j < MedBoxCols; ++j) {
-            // Chỉ đổ dữ liệu cho 10 ô đầu tiên, còn lại để trống
+            // Fill info for the first 10 cells, the rest will be left empty
             if (drugCount < 10) {
-                MedBox[i][j].name = sampleNames[drugCount];
-                MedBox[i][j].amount = rand() % 6 + 5; // Ngẫu nhiên 5-10
+                strncpy(MedBox[i][j].name, sampleNames[drugCount], sizeof(MedBox[i][j].name) - 1);
+                MedBox[i][j].name[sizeof(MedBox[i][j].name) - 1] = '\0';
+                MedBox[i][j].amount = rand() % 6 + 5; // Pick a random integer within the [5, 10] range
                 drugCount++;
             } else {
-                MedBox[i][j].name = "NaN";
+                strncpy(MedBox[i][j].name, "NaN", sizeof(MedBox[i][j].name) - 1);
+                MedBox[i][j].name[sizeof(MedBox[i][j].name) - 1] = '\0';
                 MedBox[i][j].amount = 0;
             }
         }
     }
-    cout << "Medicine Box initialized successfully!" << endl;
+    cout << "Medicine Box initialized successfully!\n";
 }
 
-bool checkMedicineAvailability(string MedName, int MedAmount) {
+bool checkMedicineAvailability(const char* MedName, int MedAmount) {
     for (int i = 0; i < MedBoxRows; ++i) {
         for (int j = 0; j < MedBoxCols; ++j) {
-            if (MedBox[i][j].name == MedName && MedBox[i][j].amount >= MedAmount) {
-                return true;
-            }
+            if (strcmp(MedBox[i][j].name, MedName) == 0 && MedBox[i][j].amount >= MedAmount) return true;
         }
     }
     return false;
@@ -111,7 +113,7 @@ void DisplayMedicalRecordsList(const MedicalRecordList& list) {
     MedicalRecordNode* current = list.head;
     while (current != nullptr) {
         displayMedicalRecord(current->record);
-        cout << "-------------------------------------" << endl;
+        cout << "-------------------------------------\n";
         current = current->next;
     }
 }
@@ -121,49 +123,43 @@ void displayMed() {
     for (int i = 0; i < MedBoxRows; ++i) {
         for (int j = 0; j < MedBoxCols; ++j) {
             cout << "Slot [" << i << "][" << j << "]: ";
-            if (MedBox[i][j].name == "NaN") {
-                cout << "Empty" << endl;
-            } else {
-                cout << MedBox[i][j].name << " (Amount: " << MedBox[i][j].amount << ")" << endl;
-            }
+            if (strcmp(MedBox[i][j].name, "NaN") == 0) cout << "Empty\n";
+            else cout << MedBox[i][j].name << " (Amount: " << MedBox[i][j].amount << ")\n";
         }
     }
 }
 
-MedicalRecord TreatingPatient(){
+MedicalRecord TreatingPatient() {
     cout << "Patient Remaining in Queue: " << patientQueue.size() << endl;
-    cout << "-------------------------------------" << endl;
+    cout << "-------------------------------------\n";
     MedicalRecord record;
+    memset(&record, 0, sizeof(record));
     Patient patient = patientQueue.front();
 
     string confirmation = "N";
-    while(confirmation != "Y" && confirmation != "y"){
+    while (confirmation != "Y" && confirmation != "y") {
         displayPatient(patient);
         char diagnosis[100];
         cout << "Enter diagnosis for the patient: ";
         cin.ignore();
         cin.getline(diagnosis, sizeof(diagnosis));
-        for (int i = 0;i<MaxMedPrescription;i++){
-            string medName;
+        for (int i = 0; i < MaxMedPrescription; i++) {
+            char medName[50];
             int medAmount;
             cout << "Enter medicine name (or 'done' to finish): ";
-            getline(cin, medName);
-            if (medName == "done") {
-                break;
-            }
+            cin.getline(medName, sizeof(medName));
+            if (strcmp(medName, "done") == 0) break;
             cout << "Enter medicine amount: ";
             cin >> medAmount;
             cin.ignore(); 
-            // Check if the medicine is available in the MedBox
+            // Check if the medicine is available in the Medical Box
             if (checkMedicineAvailability(medName, medAmount)) {
-
-                record.prescription[i].name = medName;
+                strncpy(record.prescription[i].name, medName, sizeof(record.prescription[i].name) - 1);
+                record.prescription[i].name[sizeof(record.prescription[i].name) - 1] = '\0';
                 record.prescription[i].amount = medAmount;
-                cout << "Medicine added to prescription." << endl;
+                cout << "Medicine added to prescription.\n";
                 record.medAmount++;
-            } else {
-                cout << "Medicine not available in the MedBox." << endl;
-            }
+            } else cout << "Medicine not available in the MedBox.\n";
         }
         record.patient = patient;
         strncpy(record.diagnosis, diagnosis, sizeof(record.diagnosis) - 1);
@@ -178,9 +174,9 @@ MedicalRecord TreatingPatient(){
 
 void AddMedicalRecord(MedicalRecordList &list, MedicalRecord newRecord) {
     MedicalRecordNode* newNode = new MedicalRecordNode;
-    newNode->record = newRecord; // Sao chép dữ liệu bệnh án
-    newNode->next = list.head;   // Trỏ node mới vào head hiện tại
-    list.head = newNode;         // Cập nhật head mới
+    newNode->record = newRecord; // Copy Meidcal Record data
+    newNode->next = list.head;   // Point new node to current head
+    list.head = newNode;         // Update the new head
 }
 
 void SaveRecordsToFile(MedicalRecordList list, string fileName) {
@@ -197,7 +193,7 @@ void LoadRecordsFromFile(MedicalRecordList &list, string fileName) {
     ifstream inFile(fileName, ios::binary | ios::ate);
     
     if (!inFile) {
-        cout << "File not found. Starting with an empty medical record list." << endl;
+        cout << "File not found. Starting with an empty medical record list.\n";
         list.head = nullptr;
         return;
     }
@@ -207,7 +203,7 @@ void LoadRecordsFromFile(MedicalRecordList &list, string fileName) {
 
     streamsize size = inFile.tellg(); 
     if (size == 0) {
-        cout << "Found an empty medical records file." << endl;
+        cout << "Found an empty medical records file.\n";
         list.head = nullptr;
         inFile.close();
         return;
@@ -216,7 +212,7 @@ void LoadRecordsFromFile(MedicalRecordList &list, string fileName) {
     inFile.seekg(0, ios::beg);
 
     MedicalRecord tempRecord;
-    cout << "Loading medical records from file..." << endl;
+    cout << "Loading medical records from file...\n";
     while (inFile.read(reinterpret_cast<char*>(&tempRecord), sizeof(MedicalRecord))) {
         cout << "...";
         MedicalRecordNode* newNode = new MedicalRecordNode;
@@ -231,6 +227,6 @@ void LoadRecordsFromFile(MedicalRecordList &list, string fileName) {
             tail = newNode;
         }
     }
-    cout << "Medical records loaded successfully!" << endl;
+    cout << "Medical records loaded successfully!\n";
     inFile.close();
 }
