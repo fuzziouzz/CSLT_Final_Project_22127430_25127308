@@ -7,7 +7,7 @@ queue<Patient> patientQueue;
 
 void clrscr() {
     // Shortened of Clear Screen
-    cout << "\033[2J\033[1;1H";
+    system("cls||clear");
 }
 
 
