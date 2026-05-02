@@ -1,7 +1,6 @@
 // Main loop
 // Run this file to start the program
 #include "header.h"
-#include "functions.cpp"
 #include <iomanip>
 
 int main() {
