@@ -98,6 +98,7 @@ When you start the program, you will see the main menu with four options:
 ### Option 4: Exit
 
 - Select **Option 4** to safely exit the program
+- Dynamically allocated memory will be freed
 - A thank you message is displayed
 
 ## Data Storage
