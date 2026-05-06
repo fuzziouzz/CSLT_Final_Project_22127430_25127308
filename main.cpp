@@ -9,7 +9,7 @@ int main() {
     MedicalRecordList MRL;
     InitMedBox();                        // Initiate the Medical Box
     InitPatientQueue();                  // Initiate the Queue for Patients
-    LoadRecordsFromFile(MRL, Filename);  // Create an empty MedicalRecordList if the reuested file is not found
+    LoadRecordsFromFile(MRL, Filename);  // Create an empty MedicalRecordList if the requested file is not found
     std::cout << "Press the Enter key to continue...\n";
     std::cin.get();
     clrscr();
@@ -213,6 +213,7 @@ int main() {
                 break;
             } case 4: {
                 cout << "Exiting the program.\nThank you for using Smart Clinic System!\n";
+                FreeAll(MRL);
                 cin.get();
                 return 0;
             } default: {

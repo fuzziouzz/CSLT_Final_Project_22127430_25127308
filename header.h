@@ -64,5 +64,10 @@ void clrscr();
 void DisplayMedicalRecordsList(const MedicalRecordList &list);
 void displayMed();
 
+//Free Memory
+void FreeMedBox();
+void FreeMedicalRecordList(MedicalRecordList &list);
+void FreeAll(MedicalRecordList &list);
+
 extern Medicine** MedBox;
 #endif // End of HEADER_H declaration
