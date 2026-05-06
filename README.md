@@ -22,11 +22,12 @@ The **Smart Clinic System** is a command-line application designed to manage pat
 - **Empty State Notification**: Users are notified when no records are available
 
 ### 3. **Medicine Box Management**
-- **Initialize Box**: Pre-loaded with 10 sample medicines (Paracetamol, Ibuprofen, Amoxicillin, etc.)
+- **Initialize Box**: Load medicine box from file. If file not found or file is empty, load with 10 sample medicines (Paracetamol, Ibuprofen, Amoxicillin, etc.)
 - **View Inventory**: Display all medicines and their quantities in a 4x4 grid
 - **Add Medicine**: Add new medicines to empty slots in the medicine box
 - **Delete Medicine**: Remove medicines from inventory
 - **Availability Check**: System verifies medicine availability before allowing prescriptions
+- **Persistent Storage**: All medicine box information is saved to a binary file (`MedicineBox.bin`)
 
 ### 4. **Data Persistence**
 - Medical records are saved to `MedicalRecord.bin` in binary format
