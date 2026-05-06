@@ -200,6 +200,11 @@ int main() {
                             break;
                         } case 3: {
                             backToMainMenu = true;
+                            SaveMedBoxToFile();
+                            cout << "Medicine box saved successfully!\n";
+                            cout << "Press the Enter key to return to the main menu.\n";
+                            cin.get();
+                            clrscr();
                             break;
                         } default: {
                             cout << "That was not a valid choice. Please try again.\n";

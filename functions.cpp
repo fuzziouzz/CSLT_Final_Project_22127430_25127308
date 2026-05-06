@@ -74,17 +74,25 @@ void InitMedBox() {
     for (int i = 0; i < MedBoxRows; ++i) {
         MedBox[i] = new Medicine[MedBoxCols];
     }
-
-    const char* sampleNames[] = {
+    bool MedBoxFileValid = true;
+    ifstream inFile("MedicineBox.bin", ios::binary | ios::ate);
+    if (!inFile){
+        cout<<"Medicine box file not found. Initializing with default medicines.\n";
+        MedBoxFileValid = false;
+    }
+    streamsize size = inFile.tellg(); 
+    if (size == 0) {
+        cout << "Found an empty medicine box file. Initializing with default medicines.\n";
+        MedBoxFileValid = false;
+    }
+    if (MedBoxFileValid==false){
+        const char* sampleNames[] = {
         "Paracetamol", "Ibuprofen", "Amoxicillin", "Loratadine", "Omeprazole",
         "Aspirin", "Cetirizine", "Diclofenac", "Augmentin", "Decolgen"
     };
-
-    // 3. Initiate some values
     int drugCount = 0;
     for (int i = 0; i < MedBoxRows; ++i) {
         for (int j = 0; j < MedBoxCols; ++j) {
-            // Fill info for the first 10 cells, the rest will be left empty
             if (drugCount < 10) {
                 strncpy(MedBox[i][j].name, sampleNames[drugCount], sizeof(MedBox[i][j].name) - 1);
                 MedBox[i][j].name[sizeof(MedBox[i][j].name) - 1] = '\0';
@@ -97,7 +105,28 @@ void InitMedBox() {
             }
         }
     }
+    }
+    else{
+        inFile.seekg(0, ios::beg);
+        for (int i = 0; i < MedBoxRows; ++i) {
+            for (int j = 0; j < MedBoxCols; ++j) {
+                inFile.read(reinterpret_cast<char*>(&MedBox[i][j]), sizeof(Medicine));
+            }
+        }
+        inFile.close();
+    }
     cout << "Medicine Box initialized successfully!\n";
+}
+
+void SaveMedBoxToFile() {
+    ofstream outFile("MedicineBox.bin", ios::binary | ios::trunc);
+    for (int i = 0; i < MedBoxRows; ++i) {
+        for (int j = 0; j < MedBoxCols; ++j) {
+            outFile.write(reinterpret_cast<const char*>(&MedBox[i][j]), sizeof(Medicine));
+        }
+    }
+    outFile.close();
+    cout << "Medicine box saved to file successfully!\n";
 }
 
 bool checkMedicineAvailability(const char* MedName, int MedAmount) {

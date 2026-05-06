@@ -63,6 +63,7 @@ void SaveRecordsToFile(MedicalRecordList list, string fileName);
 void clrscr();
 void DisplayMedicalRecordsList(const MedicalRecordList &list);
 void displayMed();
+void SaveMedBoxToFile();
 
 //Free Memory
 void FreeMedBox();
