@@ -7,7 +7,7 @@ queue<Patient> patientQueue;
 
 void clrscr() {
     // Shortened of Clear Screen
-    cout << "\033[2J\033[1;1H";
+    system("cls||clear");
 }
 
 
@@ -229,4 +229,27 @@ void LoadRecordsFromFile(MedicalRecordList &list, string fileName) {
     }
     cout << "Medical records loaded successfully!\n";
     inFile.close();
+}
+
+void FreeMedicalRecordList(MedicalRecordList &list) {
+    MedicalRecordNode* current = list.head;
+    while (current != nullptr) {
+        MedicalRecordNode* temp = current;
+        current = current->next;
+        delete temp;
+    }
+    list.head = nullptr;
+    cout << "Medical record list memory freed successfully!\n";
+}
+
+void FreeMedBox() {
+    for (int i = 0; i < MedBoxRows; ++i) delete[] MedBox[i];
+    delete[] MedBox;
+    cout << "Medicine box memory freed successfully!\n";
+}
+
+void FreeAll(MedicalRecordList &list) {
+    FreeMedicalRecordList(list);
+    FreeMedBox();
+    cout << "All dynamically allocated memory has been freed successfully!\n";
 }

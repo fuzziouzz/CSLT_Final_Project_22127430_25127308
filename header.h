@@ -2,6 +2,7 @@
 
 #ifndef HEADER_H
 #define HEADER_H
+#include <cstdlib>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -60,4 +61,13 @@ void AddMedicalRecord(MedicalRecordList &list, MedicalRecord newRecord);
 void LoadRecordsFromFile(MedicalRecordList &list, string fileName);
 void SaveRecordsToFile(MedicalRecordList list, string fileName);
 void clrscr();
+void DisplayMedicalRecordsList(const MedicalRecordList &list);
+void displayMed();
+
+//Free Memory
+void FreeMedBox();
+void FreeMedicalRecordList(MedicalRecordList &list);
+void FreeAll(MedicalRecordList &list);
+
+extern Medicine** MedBox;
 #endif // End of HEADER_H declaration
